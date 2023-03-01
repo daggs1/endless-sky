@@ -77,6 +77,7 @@ namespace {
 	const string BACKGROUND_PARALLAX = "Parallax background";
 	const string EXTENDED_JUMP_EFFECTS = "Extended jump effects";
 	const string ALERT_INDICATOR = "Alert indicator";
+	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 
 	// How many pages of settings there are.
 	const int SETTINGS_PAGE_COUNT = 2;
@@ -612,7 +613,8 @@ void PreferencesPanel::DrawSettings()
 		"Interrupt fast-forward",
 		"Landing zoom",
 		SCROLL_SPEED,
-		DATE_FORMAT
+		DATE_FORMAT,
+		HIDE_OUTFITTERS
 	};
 
 	bool isCategory = true;
