@@ -171,6 +171,7 @@ namespace {
 
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 	const string HIDE_OUTFITS = "Hide unknown outfits";
+	const string HIDE_SHIP_MODELS = "Hide unknown ship models";
 }
 
 
@@ -200,6 +201,7 @@ void Preferences::Load()
 	settings[HIDE_OUTFITTERS] = false;
 	settings[HIDE_OUTFITTERS] = false;
 	settings[HIDE_OUTFITS] = false;
+	settings[HIDE_SHIP_MODELS] = false;
 	settings["Extra fleet status messages"] = true;
 	settings["Target asteroid based on"] = true;
 	settings["Deadline blink by distance"] = true;
