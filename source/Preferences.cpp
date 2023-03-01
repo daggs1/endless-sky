@@ -168,6 +168,8 @@ namespace {
 	int minimapDisplayIndex = 1;
 
 	int previousSaveCount = 3;
+
+	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 }
 
 
@@ -194,6 +196,7 @@ void Preferences::Load()
 	settings["Turrets focus fire"] = true;
 	settings["Ship outlines in shops"] = true;
 	settings["Ship outlines in HUD"] = true;
+	settings[HIDE_OUTFITTERS] = false;
 	settings["Extra fleet status messages"] = true;
 	settings["Target asteroid based on"] = true;
 	settings["Deadline blink by distance"] = true;

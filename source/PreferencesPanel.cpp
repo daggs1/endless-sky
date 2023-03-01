@@ -84,6 +84,7 @@ namespace {
 	const string ALERT_INDICATOR = "Alert indicator";
 	const string MINIMAP_DISPLAY = "Show mini-map";
 	const string HUD_SHIP_OUTLINES = "Ship outlines in HUD";
+	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 
 	// How many pages of controls and settings there are.
 	const int CONTROLS_PAGE_COUNT = 2;
@@ -769,6 +770,7 @@ void PreferencesPanel::DrawSettings()
 		"System map sends move orders",
 		"\t",
 		"Other",
+		HIDE_OUTFITTERS,
 		"Always underline shortcuts",
 		REACTIVATE_HELP,
 		"Interrupt fast-forward",
