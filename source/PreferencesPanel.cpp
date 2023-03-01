@@ -67,6 +67,7 @@ namespace {
 	const string BACKGROUND_PARALLAX = "Parallax background";
 	const string ALERT_INDICATOR = "Alert indicator";
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_OUTFITS = "Hide unknown outfits";
 
 	// How many pages of settings there are.
 	const int SETTINGS_PAGE_COUNT = 2;
@@ -530,7 +531,8 @@ void PreferencesPanel::DrawSettings()
 		"Show stored outfits on map",
 		"System map sends move orders",
 		ALERT_INDICATOR,
-		HIDE_OUTFITTERS
+		HIDE_OUTFITTERS,
+		HIDE_OUTFITS
 	};
 	bool isCategory = true;
 	int page = 0;
