@@ -85,6 +85,7 @@ namespace {
 	const string MINIMAP_DISPLAY = "Show mini-map";
 	const string HUD_SHIP_OUTLINES = "Ship outlines in HUD";
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_OUTFITS = "Hide unknown outfits";
 
 	// How many pages of controls and settings there are.
 	const int CONTROLS_PAGE_COUNT = 2;
@@ -771,6 +772,8 @@ void PreferencesPanel::DrawSettings()
 		"\t",
 		"Other",
 		HIDE_OUTFITTERS,
+		HIDE_OUTFITTERS,
+		HIDE_OUTFITS,
 		"Always underline shortcuts",
 		REACTIVATE_HELP,
 		"Interrupt fast-forward",

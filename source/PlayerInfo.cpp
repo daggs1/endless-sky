@@ -3367,7 +3367,7 @@ void PlayerInfo::VisitOutfitterAt(const Planet &planet)
 // Check if the outfitter at planet was visited
 bool PlayerInfo::OutfitterVisitedAt(const Planet &planet)
 {
-	return (Preferences::Has(HIDE_OUTFITTERS)) ? visitedPlanets[&planet] : true;
+	return (Preferences::Has(HIDE_OUTFITTERS)) ? visitedOutfittersAt.contains(&planet) : true;
 }
 
 

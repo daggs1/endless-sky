@@ -170,6 +170,7 @@ namespace {
 	int previousSaveCount = 3;
 
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_OUTFITS = "Hide unknown outfits";
 }
 
 
@@ -197,6 +198,8 @@ void Preferences::Load()
 	settings["Ship outlines in shops"] = true;
 	settings["Ship outlines in HUD"] = true;
 	settings[HIDE_OUTFITTERS] = false;
+	settings[HIDE_OUTFITTERS] = false;
+	settings[HIDE_OUTFITS] = false;
 	settings["Extra fleet status messages"] = true;
 	settings["Target asteroid based on"] = true;
 	settings["Deadline blink by distance"] = true;
