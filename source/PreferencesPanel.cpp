@@ -68,6 +68,7 @@ namespace {
 	const string ALERT_INDICATOR = "Alert indicator";
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 	const string HIDE_OUTFITS = "Hide unknown outfits";
+	const string HIDE_SHIP_MODELS = "Hide unknown ship models";
 
 	// How many pages of settings there are.
 	const int SETTINGS_PAGE_COUNT = 2;
@@ -532,7 +533,8 @@ void PreferencesPanel::DrawSettings()
 		"System map sends move orders",
 		ALERT_INDICATOR,
 		HIDE_OUTFITTERS,
-		HIDE_OUTFITS
+		HIDE_OUTFITS,
+		HIDE_SHIP_MODELS
 	};
 	bool isCategory = true;
 	int page = 0;
