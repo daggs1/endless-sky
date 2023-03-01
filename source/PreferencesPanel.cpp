@@ -82,6 +82,7 @@ namespace {
 	const string HUD_SHIP_OUTLINES = "Ship outlines in HUD";
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 	const string HIDE_OUTFITS = "Hide unknown outfits";
+	const string HIDE_SHIP_MODELS = "Hide unknown ship models";
 
 	// How many pages of controls and settings there are.
 	const int CONTROLS_PAGE_COUNT = 2;
@@ -699,7 +700,8 @@ void PreferencesPanel::DrawSettings()
 		DATE_FORMAT,
 		ALERT_INDICATOR,
 		HIDE_OUTFITTERS,
-		HIDE_OUTFITS
+		HIDE_OUTFITS,
+		HIDE_SHIP_MODELS
 	};
 
 	bool isCategory = true;
