@@ -81,6 +81,7 @@ namespace {
 	const string ALERT_INDICATOR = "Alert indicator";
 	const string HUD_SHIP_OUTLINES = "Ship outlines in HUD";
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_OUTFITS = "Hide unknown outfits";
 
 	// How many pages of controls and settings there are.
 	const int CONTROLS_PAGE_COUNT = 2;
@@ -696,7 +697,9 @@ void PreferencesPanel::DrawSettings()
 		"Landing zoom",
 		SCROLL_SPEED,
 		DATE_FORMAT,
-		HIDE_OUTFITTERS
+		ALERT_INDICATOR,
+		HIDE_OUTFITTERS,
+		HIDE_OUTFITS
 	};
 
 	bool isCategory = true;
