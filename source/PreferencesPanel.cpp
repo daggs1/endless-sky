@@ -80,6 +80,7 @@ namespace {
 	const string EXTENDED_JUMP_EFFECTS = "Extended jump effects";
 	const string ALERT_INDICATOR = "Alert indicator";
 	const string HUD_SHIP_OUTLINES = "Ship outlines in HUD";
+	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
 
 	// How many pages of controls and settings there are.
 	const int CONTROLS_PAGE_COUNT = 2;
@@ -694,7 +695,8 @@ void PreferencesPanel::DrawSettings()
 		"Interrupt fast-forward",
 		"Landing zoom",
 		SCROLL_SPEED,
-		DATE_FORMAT
+		DATE_FORMAT,
+		HIDE_OUTFITTERS
 	};
 
 	bool isCategory = true;
