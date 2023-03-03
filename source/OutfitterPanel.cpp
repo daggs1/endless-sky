@@ -88,7 +88,10 @@ OutfitterPanel::OutfitterPanel(PlayerInfo &player)
 		sort(it.second.begin(), it.second.end(), BySeriesAndIndex<Outfit>());
 
 	if(player.GetPlanet())
+	{
 		outfitter = player.GetPlanet()->Outfitter();
+		player.VisitOutfitterAt(*player.GetPlanet());
+	}
 
 	for(auto &ship : player.Ships())
 		if(ship->GetPlanet() == planet)
