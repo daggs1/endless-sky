@@ -87,6 +87,12 @@ OutfitterPanel::OutfitterPanel(PlayerInfo &player, Sale<Outfit> stock)
 	for(pair<const string, vector<string>> &it : catalog)
 		sort(it.second.begin(), it.second.end(), BySeriesAndIndex<Outfit>());
 
+	if(player.GetPlanet())
+	{
+		outfitter = player.GetPlanet()->OutfitterStock();
+		player.VisitOutfitterAt(*player.GetPlanet());
+	}
+
 	for(auto &ship : player.Ships())
 		if(ship->GetPlanet() == planet)
 			++shipsHere;
