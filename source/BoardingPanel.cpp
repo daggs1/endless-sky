@@ -93,7 +93,7 @@ BoardingPanel::BoardingPanel(PlayerInfo &player, const shared_ptr<Ship> &victim)
 			++cit;
 		}
 		if(outfit && count)
-			plunder.emplace_back(outfit, count);
+			plunder.emplace_back(player, outfit, count);
 	}
 
 	canCapture = victim->IsCapturable() || player.CaptureOverriden(victim);
@@ -509,7 +509,7 @@ bool BoardingPanel::Scroll(double dx, double dy)
 
 // Constructor (commodity cargo).
 BoardingPanel::Plunder::Plunder(const string &commodity, int count, int unitValue)
-	: name(commodity), outfit(nullptr), count(count), unitValue(unitValue)
+	: knownToPlayer(true), name(commodity), outfit(nullptr), count(count), unitValue(unitValue)
 {
 	UpdateStrings();
 }
@@ -517,9 +517,11 @@ BoardingPanel::Plunder::Plunder(const string &commodity, int count, int unitValu
 
 
 // Constructor (outfit installed in the victim ship or transported as cargo).
-BoardingPanel::Plunder::Plunder(const Outfit *outfit, int count)
-	: name(outfit->DisplayName()), outfit(outfit), count(count),
-	unitValue(outfit->Cost() * (outfit->Get("installable") < 0. ? 1 : Depreciation::Full()))
+BoardingPanel::Plunder::Plunder(PlayerInfo &player, const Outfit *outfit, int count)
+	: knownToPlayer(player.OutfitIsKnown(*outfit)), name(outfit->ShownName(knownToPlayer, count)),
+	outfit(outfit), count(count),
+	unitValue((knownToPlayer ? outfit->Cost() :
+		   outfit->Mass()) * (outfit->Get("installable") < 0. ? 1 : Depreciation::Full()))
 {
 	UpdateStrings();
 }
@@ -624,7 +626,10 @@ void BoardingPanel::Plunder::UpdateStrings()
 	else
 		size = to_string(count) + " x " + Format::Number(mass);
 
-	value = Format::Credits(unitValue * count);
+	if(knownToPlayer)
+		value = Format::Credits(unitValue * count);
+	else
+		value = "???";
 }
 
 
