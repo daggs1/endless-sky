@@ -701,3 +701,21 @@ void Outfit::AddLicense(const string &name)
 	if(it == licenses.end())
 		licenses.push_back(name);
 }
+
+
+
+std::string Outfit::ShownName(bool knownToPlayer, bool multiple) const
+{
+	std::string name;
+
+	if(knownToPlayer)
+		name = (multiple) ? PluralName() : DisplayName();
+	else
+	{
+		name = "Unknown Outfit";
+		if(multiple)
+			name += "s";
+	}
+
+	return name;
+}
