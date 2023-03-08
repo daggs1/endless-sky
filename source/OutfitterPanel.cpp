@@ -90,8 +90,14 @@ OutfitterPanel::OutfitterPanel(PlayerInfo &player, Sale<Outfit> stock)
 	if(player.GetPlanet())
 	{
 		outfitter = player.GetPlanet()->OutfitterStock();
+
 		player.VisitOutfitterAt(*player.GetPlanet());
+		for(const auto &outfit : outfitter)
+			player.DiscoverOutfit(*outfit);
 	}
+
+	for(auto &&ship : player.Ships())
+		player.DiscoverOutfits(ship->Cargo().Outfits());
 
 	for(auto &ship : player.Ships())
 		if(ship->GetPlanet() == planet)
