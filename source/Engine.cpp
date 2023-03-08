@@ -2056,6 +2056,9 @@ void Engine::HandleMouseClicks()
 				clickedAsteroid = true;
 				clickRange = range;
 				flagship->SetTargetAsteroid(minable);
+
+				for(const auto &it : minable->Payload())
+					player.DiscoverOutfit(*it.first);
 			}
 		}
 	}
@@ -2285,8 +2288,12 @@ void Engine::DoCollection(Flotsam &flotsam)
 			player.Harvest(outfit);
 		}
 		else
-			message = name + to_string(amount) + " "
-				+ (amount == 1 ? outfit->DisplayName() : outfit->PluralName()) + ".";
+		{
+			bool outfitIsKnown = player.OutfitIsKnown(*outfit);
+			string outfitDisplayName = outfit->ShownName(outfitIsKnown, amount > 1);
+
+			message = name + to_string(amount) + " " + outfitDisplayName + ".";
+		}
 	}
 	else
 		commodity = flotsam.CommodityType();
