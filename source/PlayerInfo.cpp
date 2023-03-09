@@ -60,6 +60,7 @@ using namespace std;
 
 namespace {
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_OUTFITS = "Hide unknown outfits";
 	const string KNOWN_OUTFIT_KEY = "known outfit";
 
 	// Move the flagship to the start of your list of ships. It does not make sense
@@ -3057,7 +3058,7 @@ bool PlayerInfo::OutfitterVisitedAt(const Planet &planet)
 // Check if an given outfit is known to the player
 bool PlayerInfo::OutfitIsKnown(const Outfit& outfit) const
 {
-	return true;
+	return (Preferences::Has(HIDE_OUTFITS)) ? knownOutfits.count(&outfit) : true;
 }
 
 
