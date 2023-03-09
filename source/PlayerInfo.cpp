@@ -1160,6 +1160,8 @@ void PlayerInfo::AddShip(const shared_ptr<Ship> &ship)
 	ship->SetIsYours();
 	if(ship->HasBays())
 		displayCarrierHelp = true;
+
+	DiscoverOutfits(ship->Outfits());
 }
 
 
@@ -1185,6 +1187,7 @@ void PlayerInfo::BuyShip(const Ship *model, const string &name)
 
 		if(ships.back()->HasBays())
 			displayCarrierHelp = true;
+		DiscoverOutfits(model->Outfits());
 	}
 }
 
@@ -3440,6 +3443,8 @@ void PlayerInfo::ApplyChanges()
 		// Government changes may have changed the player's ship swizzles.
 		ship->SetGovernment(GameData::PlayerGovernment());
 		ship->FinishLoading(false);
+
+		DiscoverOutfits(ship->Outfits());
 	}
 
 	// Recalculate jumps that the available jobs will need
