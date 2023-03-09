@@ -1107,6 +1107,8 @@ void PlayerInfo::AddShip(const shared_ptr<Ship> &ship)
 	ships.push_back(ship);
 	ship->SetIsSpecial();
 	ship->SetIsYours();
+
+	DiscoverOutfits(ship->Outfits());
 }
 
 
@@ -1141,6 +1143,8 @@ void PlayerInfo::BuyShip(const Ship *model, const string &name, bool isGift)
 			for(const auto &it : model->Outfits())
 				stock[it.first] -= it.second;
 		}
+
+		DiscoverOutfits(model->Outfits());
 	}
 }
 
@@ -2803,6 +2807,8 @@ void PlayerInfo::ApplyChanges()
 		// Government changes may have changed the player's ship swizzles.
 		ship->SetGovernment(GameData::PlayerGovernment());
 		ship->FinishLoading(false);
+
+		DiscoverOutfits(ship->Outfits());
 	}
 
 	// Recalculate jumps that the available jobs will need
