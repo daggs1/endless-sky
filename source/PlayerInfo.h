@@ -378,6 +378,10 @@ public:
 	void DiscoverOutfit(const Outfit &outfit);
 	void DiscoverOutfits(const std::map<const Outfit *, int> &outfits);
 
+	// Methods for changing or getting if an ship model is known to the player.
+	bool ShipModelIsKnown(const Ship &ship) const;
+	void DiscoverShipModel(const Ship &ship);
+
 private:
 	// Apply any "changes" saved in this player info to the global game state.
 	void ApplyChanges();
@@ -492,6 +496,7 @@ private:
 	std::set<const Planet *> visitedPlanets;
 	std::set<const Planet *> visitedOutfittersAt;
 
+	std::set<std::string> knownShipModels;
 	std::vector<const System *> travelPlan;
 	const Planet *travelDestination = nullptr;
 

@@ -3409,6 +3409,20 @@ void PlayerInfo::DiscoverOutfits(const std::map<const Outfit *, int> &outfits)
 
 
 
+bool PlayerInfo::ShipModelIsKnown(const Ship& ship) const
+{
+	return true;
+}
+
+
+
+void PlayerInfo::DiscoverShipModel(const Ship& ship)
+{
+	knownShipModels.insert(ship.VariantName());
+}
+
+
+
 // Apply any "changes" saved in this player info to the global game state.
 void PlayerInfo::ApplyChanges()
 {
