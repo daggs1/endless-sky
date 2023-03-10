@@ -3042,7 +3042,6 @@ set<string> &PlayerInfo::Collapsed(const string &name)
 void PlayerInfo::VisitOutfitterAt(const Planet &planet)
 {
 	visitedPlanets[&planet] = true;
-
 }
 
 
@@ -3076,6 +3075,20 @@ void PlayerInfo::DiscoverOutfits(const std::map<const Outfit *, int> &outfits)
 {
 	for(const auto &it : outfits)
 		DiscoverOutfit(*it.first);
+}
+
+
+
+bool PlayerInfo::ShipModelIsKnown(const Ship& ship) const
+{
+	return true;
+}
+
+
+
+void PlayerInfo::DiscoverShipModel(const Ship& ship)
+{
+	knownShipModels.insert(ship.VariantName());
 }
 
 
