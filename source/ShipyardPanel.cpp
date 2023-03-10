@@ -61,6 +61,14 @@ ShipyardPanel::ShipyardPanel(PlayerInfo &player, Sale<Ship> stock)
 
 	for(pair<const string, vector<string>> &it : catalog)
 		sort(it.second.begin(), it.second.end(), BySeriesAndIndex<Ship>());
+
+	if(player.GetPlanet())
+	{
+		shipyard = player.GetPlanet()->ShipyardStock();
+
+		for(auto it : shipyard)
+			player.DiscoverShipModel(*it);
+	}
 }
 
 
