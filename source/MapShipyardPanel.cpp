@@ -192,6 +192,8 @@ int MapShipyardPanel::FindItem(const string &text) const
 
 void MapShipyardPanel::DrawItems()
 {
+	bool headerDrawed = false;
+
 	if(GetUI()->IsTop(this) && player.GetPlanet() && player.GetDate() >= player.StartData().GetDate() + 12)
 		DoHelp("map advanced shops");
 	list.clear();
@@ -201,10 +203,6 @@ void MapShipyardPanel::DrawItems()
 		const string &category = cat.Name();
 		auto it = catalog.find(category);
 		if(it == catalog.end())
-			continue;
-
-		// Draw the header. If this category is collapsed, skip drawing the items.
-		if(DrawHeader(corner, category))
 			continue;
 
 		for(const Ship *ship : it->second)
@@ -234,7 +232,7 @@ void MapShipyardPanel::DrawItems()
 						parkedInSystem = shipCount->second;
 				}
 			}
-			if(!isForSale && onlyShowSoldHere)
+			if((!isForSale && onlyShowSoldHere) || !player.ShipModelIsKnown(*ship))
 				continue;
 			if(!parkedInSystem && onlyShowStorageHere)
 				continue;
@@ -242,6 +240,15 @@ void MapShipyardPanel::DrawItems()
 			const Sprite *sprite = ship->Thumbnail();
 			if(!sprite)
 				sprite = ship->GetSprite();
+
+			if(!headerDrawed)
+			{
+				// Draw the header. If this category is collapsed, skip drawing the items.
+				if(DrawHeader(corner, category))
+					break;
+
+				headerDrawed = true;
+			}
 
 			const string parking_details =
 				onlyShowSoldHere || parkedInSystem == 0
