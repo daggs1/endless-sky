@@ -156,8 +156,9 @@ double MapShipyardPanel::SystemValue(const System *system) const
 		for(const StellarObject &object : system->Objects())
 			if(object.HasSprite() && object.HasValidPlanet())
 			{
-				const auto &shipyard = object.GetPlanet()->ShipyardStock();
-				if(shipyard.Has(selected))
+				const auto &planet = object.GetPlanet();
+				const auto &shipyard = planet->ShipyardStock();
+				if(shipyard.Has(selected) && player.ShipyardVisitedAt(*planet) )
 					return 1.;
 				if(!shipyard.empty())
 					value = 0.;
@@ -279,7 +280,7 @@ void MapShipyardPanel::Init()
 	catalog.clear();
 	set<const Ship *> seen;
 	for(const auto &it : GameData::Planets())
-		if(it.second.IsValid() && player.CanView(*it.second.GetSystem()))
+		if(it.second.IsValid() && player.CanView(*it.second.GetSystem()) && player.HasVisited(*it.second.GetSystem()) && player.ShipyardVisitedAt(it.second))
 			for(const Ship *ship : it.second.ShipyardStock())
 				if(!seen.contains(ship))
 				{

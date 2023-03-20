@@ -3397,7 +3397,7 @@ bool PlayerInfo::OutfitterVisitedAt(const Planet &planet)
 // Mark shipyard at planet as visited
 void PlayerInfo::VisitShipyardAt(const Planet &planet)
 {
-	visitedPlanets[&planet].shipyard = true;
+	visitedShipyardsAt.insert(&planet);
 }
 
 
