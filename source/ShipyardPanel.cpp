@@ -68,6 +68,7 @@ ShipyardPanel::ShipyardPanel(PlayerInfo &player, Sale<Ship> stock)
 
 		for(auto it : shipyard)
 			player.DiscoverShipModel(*it);
+		player.VisitShipyardAt(*player.GetPlanet());
 	}
 }
 
