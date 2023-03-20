@@ -60,6 +60,7 @@ using namespace std;
 
 namespace {
 	const string HIDE_OUTFITTERS = "Hide unvisited outfitters";
+	const string HIDE_SHIPYARDS = "Hide unvisited shipyards";
 	const string HIDE_OUTFITS = "Hide unknown outfits";
 	const string HIDE_SHIP_MODELS = "Hide unknown ship models";
 
@@ -3077,7 +3078,7 @@ void PlayerInfo::VisitShipyardAt(const Planet &planet)
 // Check if the shipyard at planet was visited
 bool PlayerInfo::ShipyardVisitedAt(const Planet &planet)
 {
-	return true;
+	return (Preferences::Has(HIDE_SHIPYARDS)) ? visitedPlanets[&planet].shipyard : true;
 }
 
 
