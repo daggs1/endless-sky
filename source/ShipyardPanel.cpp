@@ -103,6 +103,7 @@ ShipyardPanel::ShipyardPanel(PlayerInfo &player)
 
 		for(auto it : shipyard)
 			player.DiscoverShipModel(*it);
+		player.VisitOutfitterAt(*player.GetPlanet());
 	}
 }
 
