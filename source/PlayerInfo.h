@@ -384,6 +384,10 @@ private:
 
 
 private:
+	struct PlanetVisitedEstablishmets {
+		bool outfitter;
+	};
+
 	std::string firstName;
 	std::string lastName;
 	std::string filePath;
@@ -446,7 +450,7 @@ private:
 	// this map links planet to a var that states if the outfitter in the
 	// planet was visited. if the planet doesn't have an outfitter, the
 	// relevant value will always be false
-	std::map<const Planet *, bool> visitedPlanets;
+	std::map<const Planet *, struct PlanetVisitedEstablishmets> visitedPlanets;
 
 	std::set<std::string> knownShipModels;
 	std::vector<const System *> travelPlan;
