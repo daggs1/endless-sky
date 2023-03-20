@@ -4707,34 +4707,50 @@ void PlayerInfo::Save(DataWriter &out) const
 			out.Write("visited", system->TrueName());
 		});
 
-	std::map<const Planet *, bool> visitedPlanetsMap;
+	struct PlanetVisitedEstablishmets {
+		bool outfitter;
+		bool shipyard;
+	};
+
+	std::map<const Planet *, struct PlanetVisitedEstablishmets> visitedPlanetsMap;
 
 	/**
 	 * add all visited planets, shipyards and oufitters
 	 */
 	for(const auto planet : visitedPlanets)
 	{
-		bool outfitterVisited = visitedOutfittersAt.contains(planet);
+		struct PlanetVisitedEstablishmets data = {
+			.outfitter = visitedOutfittersAt.contains(planet),
+			.shipyard = visitedShipyardsAt.contains(planet),
+		};
 
-		visitedPlanetsMap.insert(make_pair(planet, outfitterVisited));
+		visitedPlanetsMap.insert(make_pair(planet, data));
 	}
 
 	// Save a list of planets the player has visited.
-	using PlanetEntry = pair<const Planet *const, bool>;
+	using PlanetEntry = pair<const Planet *const, struct PlanetVisitedEstablishmets>;
 	WriteSorted(visitedPlanetsMap,
 		[](const PlanetEntry *lhs, const PlanetEntry *rhs)
 			{ return lhs->first->TrueName() < rhs->first->TrueName(); },
 		[&out](const PlanetEntry &entry)
 		{
 			string visitedOutfitterStr = "";
+			string visitedShipyardStr = "";
 
-			if(entry.second)
+			if(entry.second.outfitter)
 				visitedOutfitterStr = "outfitter";
 
-			if(visitedOutfitterStr.empty())
+			if(entry.second.shipyard)
+				visitedShipyardStr = "shipyard";
+
+			if(visitedOutfitterStr.empty() && visitedShipyardStr.empty())
 				out.Write("visited planet", entry.first->TrueName());
-			else
+			else if(!visitedOutfitterStr.empty() && visitedShipyardStr.empty())
 				out.Write("visited planet", entry.first->TrueName(), visitedOutfitterStr);
+			else if(visitedOutfitterStr.empty() && !visitedShipyardStr.empty())
+				out.Write("visited planet", entry.first->TrueName(), visitedShipyardStr);
+			else
+				out.Write("visited planet", entry.first->TrueName(), visitedOutfitterStr, visitedShipyardStr);
 		});
 
 	if(!harvested.empty())

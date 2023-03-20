@@ -423,6 +423,10 @@ private:
 	void DiscoverMissionRequiredOutfits(const Mission &mission);
 
 private:
+	struct PlanetVisitedEstablishmets {
+		bool outfitter;
+	};
+
 	std::string firstName;
 	std::string lastName;
 	std::string filePath;
@@ -495,6 +499,7 @@ private:
 	std::set<const System *> visitedSystems;
 	std::set<const Planet *> visitedPlanets;
 	std::set<const Planet *> visitedOutfittersAt;
+	std::set<const Planet *> visitedShipyardsAt;
 
 	std::set<std::string> knownShipModels;
 	std::vector<const System *> travelPlan;
