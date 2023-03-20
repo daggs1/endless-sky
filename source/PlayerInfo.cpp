@@ -418,13 +418,18 @@ void PlayerInfo::Load(const filesystem::path &path)
 			Visit(*GameData::Planets().Get(child.Token(1)));
 
 			if(child.Size() > 2)
-			{
-				string visitedStr = child.Token(2);
+				for(int i = 2; i < child.Size(); i++)
+				{
+					string visitedStr = child.Token(i);
 
-				if(!visitedStr.empty())
-					if(visitedStr == "outfitter")
-						VisitOutfitterAt(*GameData::Planets().Get(child.Token(1)));
-			}
+					if(!visitedStr.empty())
+					{
+						if(visitedStr == "outfitter")
+							VisitOutfitterAt(*GameData::Planets().Get(child.Token(1)));
+						else if(visitedStr == "shipyard")
+							VisitShipyardAt(*GameData::Planets().Get(child.Token(1)));
+					}
+				}
 		}
 		else if(key == "harvested")
 		{
