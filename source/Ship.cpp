@@ -5269,3 +5269,14 @@ void Ship::Jettison(shared_ptr<Flotsam> toJettison)
 		++bayIndex;
 	}
 }
+
+
+
+const Sprite *Ship::GetHardpointIcon(const Outfit* outfit) const
+{
+	for(const Hardpoint &weapon : Weapons())
+		if(outfit == weapon.GetOutfit())
+			return weapon.Icon();
+
+	return NULL;
+}

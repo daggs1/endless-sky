@@ -545,6 +545,7 @@ public:
 	// Check if this ship looks the same as another, based on model display names and outfits.
 	bool Imitates(const Ship &other) const;
 
+	const Sprite *GetHardpointIcon(const Outfit* outfit) const;
 
 private:
 	// Various steps of Ship::Move:
