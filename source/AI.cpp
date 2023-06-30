@@ -3440,7 +3440,7 @@ void AI::AutoFire(const Ship &ship, FireCommand &command, bool secondary, bool i
 	for(const Hardpoint &weapon : ship.Weapons())
 		if(weapon.IsReady()
 				&& !(!currentTarget && weapon.IsHoming() && weapon.GetOutfit()->Ammo())
-				&& !(!secondary && weapon.GetOutfit()->Icon())
+				&& !(!secondary && weapon.Icon())
 				&& !(beFrugal && weapon.GetOutfit()->Ammo())
 				&& !(isWaitingToJump && weapon.GetOutfit()->FiringForce()))
 			maxRange = max(maxRange, weapon.GetOutfit()->Range());
@@ -3478,7 +3478,7 @@ void AI::AutoFire(const Ship &ship, FireCommand &command, bool secondary, bool i
 		if(!currentTarget && weapon->Homing() && weapon->Ammo())
 			continue;
 		// Don't fire secondary weapons if told not to.
-		if(!secondary && weapon->Icon())
+		if(!secondary && hardpoint.Icon())
 			continue;
 		// Don't expend ammo if trying to be frugal.
 		if(beFrugal && weapon->Ammo())
@@ -3515,7 +3515,7 @@ void AI::AutoFire(const Ship &ship, FireCommand &command, bool secondary, bool i
 			if(currentTarget->IsDisabled() && (disables || (plunders && !hasBoarded)) && !disabledOverride)
 				continue;
 			// Don't fire secondary weapons at targets that have started jumping.
-			if(weapon->Icon() && currentTarget->IsEnteringHyperspace())
+			if(hardpoint.Icon() && currentTarget->IsEnteringHyperspace())
 				continue;
 
 			// For homing weapons, don't take the velocity of the ship firing it
@@ -3592,7 +3592,7 @@ void AI::AutoFire(const Ship &ship, FireCommand &command, const Body &target) co
 	{
 		++index;
 		// Only auto-fire primary weapons that take no ammunition.
-		if(!hardpoint.IsReady() || hardpoint.GetOutfit()->Icon() || hardpoint.GetOutfit()->Ammo())
+		if(!hardpoint.IsReady() || hardpoint.Icon() || hardpoint.GetOutfit()->Ammo())
 			continue;
 
 		// Figure out where this weapon will fire from, but add some randomness
@@ -4193,7 +4193,7 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player, Command &activeCommand
 			int index = 0;
 			for(const Hardpoint &hardpoint : ship.Weapons())
 			{
-				if(hardpoint.IsReady() && !hardpoint.GetOutfit()->Icon())
+				if(hardpoint.IsReady() && !hardpoint.Icon())
 					firingCommands.SetFire(index);
 				++index;
 			}
