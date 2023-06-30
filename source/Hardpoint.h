@@ -25,6 +25,7 @@ class Flotsam;
 class Outfit;
 class Projectile;
 class Ship;
+class Sprite;
 class Visual;
 
 
@@ -114,6 +115,11 @@ public:
 	// Get the attributes that can be used as a parameter of the constructor when cloning this.
 	const BaseAttributes &GetBaseAttributes() const;
 
+	// get the hardpoint's icon (weapon's one or custom sec one)
+	const Sprite *Icon() const;
+	// set hardpoint for custom secondary
+	void SetCustomSecIdx(int idx);
+	const int GetCustomSecIdx() const;
 
 private:
 	// Check whether a projectile or flotsam is within the range of the anti-missile
@@ -156,4 +162,5 @@ private:
 	int burstCount = 0;
 	bool isFiring = false;
 	bool wasFiring = false;
+	int customSecWeaponIconIdx;
 };
