@@ -17,6 +17,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 
 #include "audio/Audio.h"
 #include "Body.h"
+#include "GameData.h"
 #include "Effect.h"
 #include "Flotsam.h"
 #include "Outfit.h"
@@ -48,7 +49,7 @@ namespace {
 Hardpoint::Hardpoint(const Point &point, const BaseAttributes &attributes,
 	bool isTurret, bool isUnder, const Outfit *outfit)
 	: outfit(outfit), point(point * .5), baseAngle(attributes.baseAngle), baseAttributes(attributes),
-	isTurret(isTurret), isParallel(baseAttributes.isParallel), isUnder(isUnder)
+	isTurret(isTurret), isParallel(baseAttributes.isParallel), isUnder(isUnder), customSecWeaponIconIdx(-1)
 {
 	UpdateArc();
 }
@@ -403,6 +404,7 @@ void Hardpoint::Reload()
 void Hardpoint::Uninstall()
 {
 	outfit = nullptr;
+	customSecWeaponIconIdx = -1;
 
 	// Update the arc of fire because of changing an outfit.
 	UpdateArc();
@@ -493,7 +495,6 @@ void Hardpoint::Fire(Ship &ship, const Point &start, const Angle &aim)
 }
 
 
-
 // The arc depends on both the base hardpoint and the installed outfit.
 void Hardpoint::UpdateArc()
 {
@@ -540,4 +541,30 @@ void Hardpoint::UpdateArc()
 		minArc = baseAngle - hardpointsMinArc;
 		maxArc = baseAngle + hardpointsMaxArc;
 	}
+}
+
+const Sprite *Hardpoint::Icon() const
+{
+	const Sprite *icon;
+
+	if(customSecWeaponIconIdx != -1)
+		icon = GameData::SecondaryCustomIcons().at(customSecWeaponIconIdx);
+	else
+		icon = outfit->Icon();
+
+	return icon;
+}
+
+
+
+void Hardpoint::SetCustomSecIdx(int idx)
+{
+	customSecWeaponIconIdx = idx;
+}
+
+
+
+const int Hardpoint::GetCustomSecIdx() const
+{
+	return customSecWeaponIconIdx;
 }
