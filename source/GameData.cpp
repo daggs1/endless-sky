@@ -82,6 +82,7 @@ namespace {
 	Set<Sale<Outfit>> defaultOutfitSales;
 	Set<Wormhole> defaultWormholes;
 	TextReplacements defaultSubstitutions;
+	std::vector<const Sprite*> defaultsecondaryCustomIcons;
 
 	Politics politics;
 
@@ -183,6 +184,7 @@ void GameData::FinishLoading()
 	defaultSubstitutions = objects.substitutions;
 	defaultWormholes = objects.wormholes;
 	playerGovernment = objects.governments.Get("Escort");
+	defaultsecondaryCustomIcons = objects.secondaryCustomIcons;
 
 	politics.Reset();
 }
@@ -724,6 +726,13 @@ const vector<Trade::Commodity> &GameData::Commodities()
 const vector<Trade::Commodity> &GameData::SpecialCommodities()
 {
 	return objects.trade.SpecialCommodities();
+}
+
+
+
+const std::vector<const Sprite *> &GameData::SecondaryCustomIcons()
+{
+	return objects.secondaryCustomIcons;
 }
 
 
