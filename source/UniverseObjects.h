@@ -125,6 +125,7 @@ private:
 	Set<Sale<Outfit>> outfitSales;
 	Set<Wormhole> wormholes;
 	std::set<double> neighborDistances;
+	std::vector<const Sprite*> secondaryCustomIcons;
 
 	Gamerules gamerules;
 	TextReplacements substitutions;
