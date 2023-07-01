@@ -252,6 +252,7 @@ void Ship::Load(const DataNode &node)
 	bool hasFinalExplode = false;
 	bool hasOutfits = false;
 	bool hasDescription = false;
+
 	for(const DataNode &child : node)
 	{
 		const string &key = child.Token(0);
@@ -330,6 +331,8 @@ void Ship::Load(const DataNode &node)
 		}
 		else if(key == "gun" || key == "turret")
 		{
+			bool withinCustomSecSet = false;
+
 			if(!hasArmament)
 			{
 				armament = Armament();
@@ -342,6 +345,8 @@ void Ship::Load(const DataNode &node)
 				hardpoint = Point(child.Value(1), child.Value(2));
 				if(child.Size() >= 4)
 					outfit = GameData::Outfits().Get(child.Token(3));
+				if(child.Size() >= 5)
+					withinCustomSecSet = (child.Token(4) == "sc");
 			}
 			else
 			{
@@ -397,10 +402,14 @@ void Ship::Load(const DataNode &node)
 					attributes.baseAngle = first + (second - first).AbsDegrees() / 2.;
 				}
 			}
+
 			if(key == "gun")
 				armament.AddGunPort(hardpoint, attributes, drawUnder, outfit);
 			else
 				armament.AddTurret(hardpoint, attributes, drawUnder, outfit);
+
+			if(withinCustomSecSet)
+				DefineAsCustomSecWeapon(outfit);
 		}
 		else if(key == "never disabled")
 			neverDisabled = true;
@@ -675,7 +684,20 @@ void Ship::FinishLoading(bool isNewInstance)
 					const Outfit *outfit = (nextGun == end) ? nullptr : nextGun->GetOutfit();
 					merged.AddGunPort(bit->GetPoint() * 2., bit->GetBaseAttributes(), bit->IsUnder(), outfit);
 					if(nextGun != end)
+					{
+						if(nextGun->GetCustomSecIdx() != -1)
+						{
+							for(const Hardpoint &hp : merged.Get())
+								if(nextGun->GetOutfit() == hp.GetOutfit())
+								{
+									Hardpoint &weapon = const_cast<Hardpoint &>(hp);
+
+									weapon.SetCustomSecIdx(nextGun->GetCustomSecIdx());
+								}
+						}
 						++nextGun;
+					}
+
 				}
 				else
 				{
@@ -684,7 +706,19 @@ void Ship::FinishLoading(bool isNewInstance)
 					const Outfit *outfit = (nextTurret == end) ? nullptr : nextTurret->GetOutfit();
 					merged.AddTurret(bit->GetPoint() * 2., bit->GetBaseAttributes(), bit->IsUnder(), outfit);
 					if(nextTurret != end)
+					{
+						if(nextGun->GetCustomSecIdx() != -1)
+						{
+							for(const Hardpoint &hp : merged.Get())
+								if(nextGun->GetOutfit() == hp.GetOutfit())
+								{
+									Hardpoint &weapon = const_cast<Hardpoint &>(hp);
+
+									weapon.SetCustomSecIdx(nextGun->GetCustomSecIdx());
+								}
+						}
 						++nextTurret;
+					}
 				}
 			}
 			armament = merged;
@@ -1065,8 +1099,15 @@ void Ship::Save(DataWriter &out) const
 		{
 			const char *type = (hardpoint.IsTurret() ? "turret" : "gun");
 			if(hardpoint.GetOutfit())
-				out.Write(type, 2. * hardpoint.GetPoint().X(), 2. * hardpoint.GetPoint().Y(),
-					hardpoint.GetOutfit()->TrueName());
+			{
+				const Sprite *icon = hardpoint.Icon();
+				if(icon && (hardpoint.GetOutfit()->Icon() != icon))
+					out.Write(type, 2. * hardpoint.GetPoint().X(), 2. * hardpoint.GetPoint().Y(),
+						hardpoint.GetOutfit()->TrueName(), "sc");
+				else
+					out.Write(type, 2. * hardpoint.GetPoint().X(), 2. * hardpoint.GetPoint().Y(),
+						hardpoint.GetOutfit()->TrueName());
+			}
 			else
 				out.Write(type, 2. * hardpoint.GetPoint().X(), 2. * hardpoint.GetPoint().Y());
 			const auto &attributes = hardpoint.GetBaseAttributes();
@@ -5074,4 +5115,59 @@ const Sprite *Ship::GetHardpointIcon(const Outfit* outfit) const
 			return weapon.Icon();
 
 	return NULL;
+}
+
+
+
+const bool Ship::DefineAsCustomSecWeapon(const Outfit *selectedWeapon)
+{
+	bool retVal = false;
+	int idx = -1;
+
+	for(uint32_t i = 0; i < GameData::SecondaryCustomIcons().size(); ++i)
+	{
+		bool idxUsed = false;
+
+		for(const Hardpoint &weapon : Weapons())
+			if(weapon.GetCustomSecIdx() == static_cast<int>(i))
+			{
+				idxUsed = true;
+				break;
+			}
+
+		if(!idxUsed)
+		{
+			idx = i;
+			retVal = true;
+			break;
+		}
+	}
+
+	for(const Hardpoint &hp : Weapons())
+		if(hp.GetOutfit()->TrueName() == selectedWeapon->TrueName())
+		{
+			Hardpoint &weapon = const_cast<Hardpoint &>(hp);
+
+			weapon.SetCustomSecIdx(idx);
+		}
+
+	return retVal;
+}
+
+
+
+const bool Ship::UnDefineAsCustomSecWeapon(const Outfit *selectedWeapon)
+{
+	bool retVal = false;
+
+	for(const Hardpoint &hp : Weapons())
+		if(hp.GetOutfit() == selectedWeapon)
+		{
+			Hardpoint &weapon = const_cast<Hardpoint &>(hp);
+
+			weapon.SetCustomSecIdx(-1);
+			retVal |= true;
+		}
+
+	return retVal;
 }
