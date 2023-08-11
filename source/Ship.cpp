@@ -667,7 +667,7 @@ void Ship::FinishLoading(bool isNewInstance)
 					merged.AddTurret(bit->GetPoint() * 2., bit->IsUnder(), outfit);
 					if(nextTurret != end)
 					{
-						if(nextGun->GetCustomSecIdx() != -1)
+						if(nextGun->GetOutfit() && (nextGun->GetCustomSecIdx() != -1))
 						{
 							for(const Hardpoint &hp : merged.Get())
 								if(nextGun->GetOutfit() == hp.GetOutfit())
