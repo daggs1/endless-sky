@@ -5144,7 +5144,7 @@ const bool Ship::DefineAsCustomSecWeapon(const Outfit *selectedWeapon)
 	}
 
 	for(const Hardpoint &hp : Weapons())
-		if(hp.GetOutfit()->TrueName() == selectedWeapon->TrueName())
+		if(hp.GetOutfit() && (hp.GetOutfit()->TrueName() == selectedWeapon->TrueName()))
 		{
 			Hardpoint &weapon = const_cast<Hardpoint &>(hp);
 
