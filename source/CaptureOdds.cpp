@@ -168,7 +168,12 @@ int CaptureOdds::Index(int attackingCrew, int defendingCrew) const
 // number of them are left, either for attacking or for defending.
 vector<double> CaptureOdds::Power(const Ship &ship, bool isDefender)
 {
+	double shipBuiltinDefence = ship.Attributes().Get("capture defense");
 	vector<double> power;
+
+	if(isDefender && shipBuiltinDefence)
+		power.insert(power.end(), shipBuiltinDefence);
+
 	if(!ship.Crew())
 		return power;
 
