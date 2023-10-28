@@ -182,6 +182,9 @@ public:
 	// with a single choice, and then replacing any wildcard text as well.
 	Mission Instantiate(const PlayerInfo &player, const std::shared_ptr<Ship> &boardingShip = nullptr) const;
 
+	const bool ActionsHasCargo() const;
+	const int ActionsCargoSize() const;
+
 
 private:
 	bool Enter(const System *system, PlayerInfo &player, UI *ui);

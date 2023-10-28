@@ -29,6 +29,7 @@ this program. If not, see <https://www.gnu.org/licenses/>.
 #include "UI.h"
 
 #include <cstdlib>
+#include <sstream>
 
 using namespace std;
 
@@ -199,6 +200,14 @@ void GameAction::LoadSingle(const DataNode &child)
 		fail.insert(child.Token(1));
 	else if(key == "fail")
 		failCaller = true;
+	else if((key == "cargo") && hasValue)
+	{
+		int count = (child.Size() < 3 ? 1 : static_cast<int>(child.Value(2)));
+		if(count)
+			cargo = make_pair(static_cast<std::string>(child.Token(1)), count);
+		else
+			child.PrintTrace("Error: Skipping invalid cargo quantity:");
+	}
 	else
 		conditions.Add(child);
 }
@@ -244,6 +253,8 @@ void GameAction::Save(DataWriter &out) const
 		out.Write("fail", name);
 	if(failCaller)
 		out.Write("fail");
+	if(!cargo.first.empty() && (cargo.second > 0))
+		out.Write("cargo", cargo.first, cargo.second);
 
 	conditions.Save(out);
 }
@@ -370,6 +381,58 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 	if(failCaller && caller)
 		player.FailMission(*caller);
 
+	if(!CargoLabel().empty() && CargoSize())
+	{
+		if(CargoSize() > 0) // adding cargo
+		{
+			if(player.Flagship()->Cargo().FreePrecise() < CargoSize())
+			{
+				stringstream stream;
+
+				string special = "There is not enough space in your ship's cargohold to store " + CargoLabel();
+				special += ", (";
+				stream << CargoSize();
+				stream >> special;
+				special += " ton";
+				special += (CargoSize() == 1) ? "" : "s";
+				special += " are required while only ";
+				stream << player.Flagship()->Cargo().Free();
+				stream >> special;
+				special += " ton";
+				special += (player.Flagship()->Cargo().Free() == 1) ? "" : "s";
+				special += " are free)";
+
+				ui->Push(new Dialog(special));
+			}
+			else
+				player.Flagship()->Cargo().Add(CargoLabel(), CargoSize());
+		}
+		else // removing cargo
+		{
+			int storedSargoSize = player.Flagship()->Cargo().Get(CargoLabel());
+			if(storedSargoSize < abs(CargoSize()))
+			{
+				stringstream stream;
+
+				string special = "There is not enough " + CargoLabel() + " in your ship's cargohold to unload, (";
+				stream << storedSargoSize;
+				stream >> special;
+				special += " ton";
+				special += (storedSargoSize == 1) ? "" : "s";
+				special += " are available while only ";
+				stream << abs(CargoSize());
+				stream >> special;
+				special += " ton";
+				special += (CargoSize() == -1) ? "" : "s";
+				special += " are loaded)";
+
+				ui->Push(new Dialog(special));
+			}
+			else
+				player.Flagship()->Cargo().Remove(CargoLabel(), CargoSize());
+		}
+	}
+
 	// Check if applying the conditions changes the player's reputations.
 	conditions.Apply(player.Conditions());
 }
@@ -412,5 +475,21 @@ GameAction GameAction::Instantiate(map<string, string> &subs, int jumps, int pay
 
 	result.conditions = conditions;
 
+	result.cargo = cargo;
+
 	return result;
+}
+
+
+
+const int GameAction::CargoSize() const
+{
+	return cargo.second;
+}
+
+
+
+const std::string GameAction::CargoLabel() const
+{
+	return cargo.first;
 }

@@ -392,3 +392,17 @@ int64_t MissionAction::Payment() const noexcept
 {
 	return action.Payment();
 }
+
+
+
+const std::string MissionAction::CargoLabel() const
+{
+	return action.CargoLabel();
+}
+
+
+
+const int MissionAction::CargoSize() const
+{
+	return action.CargoSize();
+}
