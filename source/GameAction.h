@@ -73,6 +73,8 @@ public:
 	// payment, event delay, etc.
 	GameAction Instantiate(std::map<std::string, std::string> &subs, int jumps, int payload) const;
 
+	const std::string CargoLabel() const;
+	const int CargoSize() const;
 
 private:
 	bool isEmpty = true;
@@ -82,6 +84,7 @@ private:
 	std::map<const GameEvent *, std::pair<int, int>> events;
 	std::vector<ShipManager> giftShips;
 	std::map<const Outfit *, int> giftOutfits;
+	std::pair<std::string, int> cargo;
 
 	int64_t payment = 0;
 	int64_t paymentMultiplier = 0;

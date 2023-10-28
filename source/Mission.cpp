@@ -1598,3 +1598,24 @@ bool Mission::ParseContraband(const DataNode &node)
 
 	return true;
 }
+
+
+
+const bool Mission::ActionsHasCargo() const
+{
+	return !!ActionsCargoSize();
+}
+
+
+
+const int Mission::ActionsCargoSize() const
+{
+	int count = 0;
+
+	for(const auto &it : actions)
+		count =+ (!it.second.CargoLabel().empty() && (it.second.CargoSize() > 0)) ? it.second.CargoSize() : 0;
+
+	return count;
+}
+
+

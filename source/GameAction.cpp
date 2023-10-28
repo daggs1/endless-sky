@@ -199,6 +199,14 @@ void GameAction::LoadSingle(const DataNode &child)
 		fail.insert(child.Token(1));
 	else if(key == "fail")
 		failCaller = true;
+	else if((key == "cargo") && hasValue)
+	{
+		int count = (child.Size() < 3 ? 1 : static_cast<int>(child.Value(2)));
+		if(count)
+			cargo = make_pair(static_cast<std::string>(child.Token(1)), count);
+		else
+			child.PrintTrace("Error: Skipping invalid cargo quantity:");
+	}
 	else
 		conditions.Add(child);
 }
@@ -244,6 +252,8 @@ void GameAction::Save(DataWriter &out) const
 		out.Write("fail", name);
 	if(failCaller)
 		out.Write("fail");
+	if(!cargo.first.empty() && (cargo.second > 0))
+		out.Write("cargo", cargo.first, cargo.second);
 
 	conditions.Save(out);
 }
@@ -370,6 +380,9 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 	if(failCaller && caller)
 		player.FailMission(*caller);
 
+	if(!CargoLabel().empty() && (CargoSize() > 0))
+		player.Flagship()->Cargo().Add(CargoLabel(), CargoSize());
+
 	// Check if applying the conditions changes the player's reputations.
 	conditions.Apply(player.Conditions());
 }
@@ -412,5 +425,21 @@ GameAction GameAction::Instantiate(map<string, string> &subs, int jumps, int pay
 
 	result.conditions = conditions;
 
+	result.cargo = cargo;
+
 	return result;
+}
+
+
+
+const int GameAction::CargoSize() const
+{
+	return cargo.second;
+}
+
+
+
+const std::string GameAction::CargoLabel() const
+{
+	return cargo.first;
 }

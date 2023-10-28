@@ -550,6 +550,8 @@ void CargoHold::AddMissionCargo(const Mission *mission)
 	// show "important documents" even if the documents take up no cargo space.
 	if(mission && !mission->Cargo().empty())
 		missionCargo[mission] += mission->CargoSize();
+	if(mission && mission->ActionsHasCargo())
+		missionCargo[mission] += mission->ActionsCargoSize();
 	if(mission && mission->Passengers())
 		passengers[mission] += mission->Passengers();
 }

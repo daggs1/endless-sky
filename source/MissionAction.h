@@ -76,6 +76,9 @@ public:
 
 	int64_t Payment() const noexcept;
 
+	const std::string CargoLabel() const;
+	const int CargoSize() const;
+
 private:
 	std::string trigger;
 	std::string system;
