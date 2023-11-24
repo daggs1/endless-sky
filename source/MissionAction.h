@@ -78,6 +78,7 @@ public:
 
 	const std::string CargoLabel() const;
 	const int CargoSize() const;
+	const int PassengersCount() const;
 
 private:
 	std::string trigger;

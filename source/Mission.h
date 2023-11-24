@@ -184,6 +184,7 @@ public:
 
 	const bool ActionsHasCargo() const;
 	const int ActionsCargoSize() const;
+	const int ActionsPassengersCount() const;
 
 
 private:

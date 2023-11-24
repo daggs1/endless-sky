@@ -1619,3 +1619,13 @@ const int Mission::ActionsCargoSize() const
 }
 
 
+
+const int Mission::ActionsPassengersCount() const
+{
+	int count = 0;
+
+	for(const auto &it : actions)
+		count += (it.second.PassengersCount() > 0) ? it.second.PassengersCount() : 0;
+
+	return count;
+}

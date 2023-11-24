@@ -75,6 +75,7 @@ public:
 
 	const std::string CargoLabel() const;
 	const int CargoSize() const;
+	const int64_t Passengers() const;
 
 private:
 	bool isEmpty = true;
@@ -89,6 +90,7 @@ private:
 	int64_t payment = 0;
 	int64_t paymentMultiplier = 0;
 	int64_t fine = 0;
+	int64_t passengers = 0;
 
 	// When this action is performed, the missions with these names fail.
 	std::set<std::string> fail;

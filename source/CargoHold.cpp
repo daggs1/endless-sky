@@ -554,6 +554,8 @@ void CargoHold::AddMissionCargo(const Mission *mission)
 		missionCargo[mission] += mission->ActionsCargoSize();
 	if(mission && mission->Passengers())
 		passengers[mission] += mission->Passengers();
+	if(mission && mission->ActionsPassengersCount())
+		passengers[mission] += mission->ActionsPassengersCount();
 }
 
 

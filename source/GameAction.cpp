@@ -208,6 +208,14 @@ void GameAction::LoadSingle(const DataNode &child)
 		else
 			child.PrintTrace("Error: Skipping invalid cargo quantity:");
 	}
+	else if((key == "passengers") && hasValue)
+	{
+		int count = (child.Size() < 3 ? 1 : static_cast<int>(child.Value(2)));
+		if(count)
+			passengers = count;
+		else
+			child.PrintTrace("Error: Skipping invalid cargo quantity:");
+	}
 	else
 		conditions.Add(child);
 }
@@ -255,6 +263,8 @@ void GameAction::Save(DataWriter &out) const
 		out.Write("fail");
 	if(!cargo.first.empty() && (cargo.second > 0))
 		out.Write("cargo", cargo.first, cargo.second);
+	if(!passengers)
+		out.Write("passengers", passengers);
 
 	conditions.Save(out);
 }
@@ -433,6 +443,48 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 		}
 	}
 
+	if(passengers != 0)
+	{
+		if(passengers > 0) // passengers embarking
+		{
+			if(player.Flagship()->Cargo().BunksFree() < passengers)
+			{
+				stringstream stream;
+
+				string special = "There is not enough bunks in your ship allow embarking";
+				special += " of passengers, (";
+				stream << passengers;
+				stream >> special;
+				special += " are required while only ";
+				stream << player.Flagship()->Cargo().BunksFree();
+				stream >> special;
+				special += " are free)";
+
+				ui->Push(new Dialog(special));
+			}
+			else
+				player.Flagship()->Cargo().Remove(CargoLabel(), CargoSize());
+		}
+		else // passengers disbarking
+		{
+			if(player.Flagship()->Cargo().Passengers() < abs(passengers))
+			{
+				stringstream stream;
+
+				string special = "There is not enough passengers on your ship allow disbarking (";
+				stream << abs(passengers);
+				stream >> special;
+				special += " are required while only ";
+				stream << player.Flagship()->Cargo().Passengers();
+				stream >> special;
+				special += " onboard)";
+
+				ui->Push(new Dialog(special));
+			}
+			else
+				player.Flagship()->Cargo().Remove(CargoLabel(), CargoSize());
+		}
+	}
 	// Check if applying the conditions changes the player's reputations.
 	conditions.Apply(player.Conditions());
 }
@@ -476,6 +528,7 @@ GameAction GameAction::Instantiate(map<string, string> &subs, int jumps, int pay
 	result.conditions = conditions;
 
 	result.cargo = cargo;
+	result.passengers = passengers;
 
 	return result;
 }
@@ -492,4 +545,11 @@ const int GameAction::CargoSize() const
 const std::string GameAction::CargoLabel() const
 {
 	return cargo.first;
+}
+
+
+
+const int64_t GameAction::Passengers() const
+{
+	return passengers;
 }

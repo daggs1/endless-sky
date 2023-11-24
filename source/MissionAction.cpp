@@ -406,3 +406,10 @@ const int MissionAction::CargoSize() const
 {
 	return action.CargoSize();
 }
+
+
+
+const int MissionAction::PassengersCount() const
+{
+	return action.Passengers();
+}
