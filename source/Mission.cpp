@@ -1014,6 +1014,13 @@ bool Mission::Do(Trigger trigger, PlayerInfo &player, UI *ui, const shared_ptr<S
 
 		visitedStopovers.insert(*it);
 		stopovers.erase(it);
+
+		for(const auto &act : actions)
+			if(((act.first == STOPOVER) || (act.first == WAYPOINT)) && act.second.ForceTextPrint()) {
+				act.second.Do(player, ui, this, (destination && isVisible) ? destination->GetSystem() : nullptr, boardingShip, IsUnique());
+				break;
+			}
+
 		if(!stopovers.empty())
 			return false;
 	}

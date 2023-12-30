@@ -79,6 +79,7 @@ public:
 	const std::string CargoLabel() const;
 	const int CargoSize() const;
 	const int PassengersCount() const;
+	const bool ForceTextPrint() const;
 
 private:
 	std::string trigger;
@@ -94,6 +95,8 @@ private:
 
 	// Tasks this mission action performs, such as modifying accounts, inventory, or conditions.
 	GameAction action;
+
+	bool forceTextPrint;
 };
 
 

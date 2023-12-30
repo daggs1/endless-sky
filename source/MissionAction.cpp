@@ -128,6 +128,8 @@ void MissionAction::LoadSingle(const DataNode &child)
 		else
 			child.PrintTrace("Error: Unsupported use of \"system\" LocationFilter:");
 	}
+	else if(key == "display text")
+		forceTextPrint = true;
 	else
 		action.LoadSingle(child);
 }
@@ -383,6 +385,8 @@ MissionAction MissionAction::Instantiate(map<string, string> &subs, const System
 	if(result.action.Fine() && trigger != "complete")
 		subs["<fine>"] = previousFine;
 
+	result.forceTextPrint = forceTextPrint;
+
 	return result;
 }
 
@@ -412,4 +416,11 @@ const int MissionAction::CargoSize() const
 const int MissionAction::PassengersCount() const
 {
 	return action.Passengers();
+}
+
+
+
+const bool MissionAction::ForceTextPrint() const
+{
+	return forceTextPrint;
 }
