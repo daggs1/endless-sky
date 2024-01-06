@@ -398,17 +398,18 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 			if(player.Flagship()->Cargo().FreePrecise() < CargoSize())
 			{
 				stringstream stream;
+				std::string data;
 
 				string special = "There is not enough space in your ship's cargohold to store " + CargoLabel();
 				special += ", (";
 				stream << CargoSize();
-				stream >> special;
-				special += " ton";
+				stream >> data;
+				special += data + " ton";
 				special += (CargoSize() == 1) ? "" : "s";
 				special += " are required while only ";
 				stream << player.Flagship()->Cargo().Free();
-				stream >> special;
-				special += " ton";
+				stream >> data;
+				special += data + " ton";
 				special += (player.Flagship()->Cargo().Free() == 1) ? "" : "s";
 				special += " are free)";
 
@@ -423,16 +424,17 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 			if(storedSargoSize < abs(CargoSize()))
 			{
 				stringstream stream;
+				std::string data;
 
 				string special = "There is not enough " + CargoLabel() + " in your ship's cargohold to unload, (";
 				stream << storedSargoSize;
-				stream >> special;
-				special += " ton";
+				stream >> data;
+				special += data + " ton";
 				special += (storedSargoSize == 1) ? "" : "s";
 				special += " are available while only ";
 				stream << abs(CargoSize());
-				stream >> special;
-				special += " ton";
+				stream >> data;
+				special += data + " ton";
 				special += (CargoSize() == -1) ? "" : "s";
 				special += " are loaded)";
 
@@ -450,15 +452,16 @@ void GameAction::Do(PlayerInfo &player, UI *ui, const Mission *caller) const
 			if(player.Flagship()->Cargo().BunksFree() < passengers)
 			{
 				stringstream stream;
+				std::string data;
 
 				string special = "There is not enough bunks in your ship allow embarking";
 				special += " of passengers, (";
 				stream << passengers;
-				stream >> special;
-				special += " are required while only ";
+				stream >> data;
+				special += data + " are required while only ";
 				stream << player.Flagship()->Cargo().BunksFree();
-				stream >> special;
-				special += " are free)";
+				stream >> data;
+				special += data + " are free)";
 
 				ui->Push(new Dialog(special));
 			}
