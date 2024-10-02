@@ -48,6 +48,7 @@ opts = Variables()
 opts.AddVariables(
 	EnumVariable("mode", "Compilation mode", "release", allowed_values=("release", "debug", "profile")),
 	EnumVariable("opengl", "Whether to use OpenGL or OpenGL ES", "desktop", allowed_values=("desktop", "gles")),
+	EnumVariable("build_tests", "Build all tests", "yes", allowed_values=("yes", "no")),
 	PathVariable("BUILDDIR", "Directory to store compiled object files in", "build", PathVariable.PathIsDirCreate),
 	PathVariable("BIN_DIR", "Directory to store binaries in", ".", PathVariable.PathIsDirCreate),
 	PathVariable("DESTDIR", "Destination root directory, e.g. if building a package", "", PathVariable.PathAccept),
@@ -163,34 +164,34 @@ if is_windows_host:
 sky = env.Program(pathjoin(binDirectory, "endless-sky"), exeObjs + sourceLib)
 env.Default(sky)
 
-
-# The testing infrastructure ignores "mode" specification (i.e. we only test optimized output).
-# (If we add support for code coverage output, this will likely need to change.)
-testBuildDirectory = pathjoin("tests", "unit", env["BUILDDIR"])
-env.VariantDir(testBuildDirectory, pathjoin("tests", "unit", "src"), duplicate = 0)
-test = env.Program(
-	target=pathjoin("tests", "unit", "endless-sky-tests"),
-	source=RecursiveGlob("*.cpp", testBuildDirectory) + sourceLib,
-	# Add Catch header & additional test includes to the existing search paths.
-	CPPPATH=(env.get('CPPPATH', []) + [pathjoin('tests', 'unit', 'include')]),
-	# Do not link against the actual implementations of SDL, OpenGL, etc.
-	LIBS=sys_libs,
-	# Pass the necessary link flags for a console program.
-	LINKFLAGS=[x for x in env.get('LINKFLAGS', []) if x not in ('-mwindows',)]
-)
-# Invoking scons with the `build-tests` target will build the unit test framework
-env.Alias("build-tests", test)
-# Invoking scons with the `test` target will build (if necessary) and
-# execute the unit test framework (always). All non-hidden tests are run.
-catch2_args = " " + " ".join([
-	"-i",
-	"--warn NoAssertions",
-	"--order rand",
-	"--rng-seed 'time'",
-])
-test_runner = env.Action(test[0].abspath + catch2_args, 'Running tests...')
-env.Alias("test", test, test_runner)
-env.AlwaysBuild("test")
+if env["build_tests"] == "yes":
+	# The testing infrastructure ignores "mode" specification (i.e. we only test optimized output).
+	# (If we add support for code coverage output, this will likely need to change.)
+	testBuildDirectory = pathjoin("tests", "unit", env["BUILDDIR"])
+	env.VariantDir(testBuildDirectory, pathjoin("tests", "unit", "src"), duplicate = 0)
+	test = env.Program(
+		target=pathjoin("tests", "unit", "endless-sky-tests"),
+		source=RecursiveGlob("*.cpp", testBuildDirectory) + sourceLib,
+		# Add Catch header & additional test includes to the existing search paths.
+		CPPPATH=(env.get('CPPPATH', []) + [pathjoin('tests', 'unit', 'include')]),
+		# Do not link against the actual implementations of SDL, OpenGL, etc.
+		LIBS=sys_libs,
+		# Pass the necessary link flags for a console program.
+		LINKFLAGS=[x for x in env.get('LINKFLAGS', []) if x not in ('-mwindows',)]
+	)
+	# Invoking scons with the `build-tests` target will build the unit test framework
+	env.Alias("build-tests", test)
+	# Invoking scons with the `test` target will build (if necessary) and
+	# execute the unit test framework (always). All non-hidden tests are run.
+	catch2_args = " " + " ".join([
+		"-i",
+		"--warn NoAssertions",
+		"--order rand",
+		"--rng-seed 'time'",
+	])
+	test_runner = env.Action(test[0].abspath + catch2_args, 'Running tests...')
+	env.Alias("test", test, test_runner)
+	env.AlwaysBuild("test")
 
 
 # Install the binary:
