@@ -449,6 +449,13 @@ int64_t MissionAction::Payment() const noexcept
 
 
 
+const std::map<const Outfit *, int> &MissionAction::Outfits() const
+{
+	return action.Outfits();
+}
+
+
+
 string MissionAction::CollapseDialog(const map<string, string> *subs) const
 {
 	// No subs means we're determining whether the dialog is pure text.

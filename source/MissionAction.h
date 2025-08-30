@@ -82,6 +82,7 @@ public:
 
 	int64_t Payment() const noexcept;
 
+	const std::map<const Outfit *, int> &Outfits() const;
 
 private:
 	class MissionDialog {

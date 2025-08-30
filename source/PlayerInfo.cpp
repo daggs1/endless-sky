@@ -508,6 +508,9 @@ void PlayerInfo::Load(const filesystem::path &path)
 	DistributeMissionCargo(missionCargoToDistribute, missions, ships, cargo, false);
 	DistributeMissionCargo(missionPassengersToDistribute, missions, ships, cargo, true);
 
+	for(Mission &mission : missions)
+		DiscoverMissionRequiredOutfits(mission);
+
 	// If no depreciation record was loaded, every item in the player's fleet
 	// will count as non-depreciated.
 	if(!depreciation.IsLoaded())
@@ -2313,6 +2316,8 @@ void PlayerInfo::AcceptJob(const Mission &mission, UI *ui)
 				RemoveMission(Mission::Trigger::FAIL, *it, ui);
 			// Might not have cargo anymore, so some jobs can be sorted to end.
 			SortAvailable();
+
+			DiscoverMissionRequiredOutfits(mission);
 			break;
 		}
 }
@@ -4999,4 +5004,13 @@ bool PlayerInfo::HasClearance() const
 		[this](const Mission &mission) -> bool {
 			return mission.HasClearance(planet);
 		});
+}
+
+
+
+void PlayerInfo::DiscoverMissionRequiredOutfits(const Mission &mission)
+{
+	for(auto item : mission.GetAction(Mission::Trigger::COMPLETE).Outfits())
+		if (item.second < 0)
+			DiscoverOutfit(*item.first);
 }

@@ -416,6 +416,7 @@ private:
 
 	bool HasClearance() const;
 
+	void DiscoverMissionRequiredOutfits(const Mission &mission);
 
 private:
 	std::string firstName;
